@@ -1,8 +1,9 @@
 "use client";
 
+import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 
-export default function ResultsPage() {
+function ResultsContent() {
   const searchParams = useSearchParams();
 
   const score = searchParams.get("score");
@@ -47,5 +48,13 @@ export default function ResultsPage() {
         </ul>
       </div>
     </main>
+  );
+}
+
+export default function ResultsPage() {
+  return (
+    <Suspense fallback={<div className="p-8">Loading results...</div>}>
+      <ResultsContent />
+    </Suspense>
   );
 }
