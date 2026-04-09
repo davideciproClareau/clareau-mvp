@@ -1,8 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { scoreSubmission } from "@/lib/scoring";
 
 export default function QuizPage() {
+  const router = useRouter();
   const [form, setForm] = useState({
     fullName: "",
     email: "",
@@ -21,10 +24,19 @@ export default function QuizPage() {
   }
 
   function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    console.log("Quiz submitted:", form);
-    alert("Quiz submitted successfully / Questionnaire envoyé avec succès");
-  }
+  e.preventDefault();
+
+  const result = scoreSubmission(form);
+
+  const params = new URLSearchParams({
+    score: String(result.total),
+    risk: result.riskLevel,
+    recommendations: result.recommendations.join("||"),
+    products: result.products.join("||"),
+  });
+
+  router.push(`/results?${params.toString()}`);
+}
 
   return (
     <main className="min-h-screen bg-slate-50 px-6 py-12 text-slate-900">
