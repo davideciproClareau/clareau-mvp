@@ -27,7 +27,7 @@ export default function QuizPage() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-50 px-6 py-12">
+    <main className="min-h-screen bg-slate-50 px-6 py-12 text-slate-900">
       <div className="mx-auto max-w-2xl rounded-2xl border bg-white p-8 shadow-sm">
         <h1 className="mb-2 text-3xl font-bold">
           Get My Water Score / Obtenir mon score d’eau
