@@ -28,14 +28,8 @@ export default function QuizPage() {
 
   const result = scoreSubmission(form);
 
-  const params = new URLSearchParams({
-    score: String(result.total),
-    risk: result.riskLevel,
-    recommendations: result.recommendations.join("||"),
-    products: result.products.join("||"),
-  });
-
-  router.push(`/results?${params.toString()}`);
+  sessionStorage.setItem("clareauResult", JSON.stringify(result));
+  router.push("/results");
 }
 
   return (
