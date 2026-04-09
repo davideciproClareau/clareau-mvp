@@ -1,5 +1,5 @@
 "use client";
-
+import { supabase } from "../../lib/supabase";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { scoreSubmission } from "@/lib/scoring";
@@ -23,10 +23,35 @@ export default function QuizPage() {
     setForm((prev) => ({ ...prev, [name]: value }));
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
   e.preventDefault();
 
   const result = scoreSubmission(form);
+
+  const { error } = await supabase.from("submissions").insert([
+    {
+      full_name: form.fullName,
+      email: form.email,
+      postal_code: form.postalCode,
+      water_source: form.waterSource,
+      plumbing_age: form.plumbingAge,
+      hardness: form.hardness,
+      taste_odor: form.tasteOdor,
+      staining: form.staining,
+      skin_hair_issue: form.skinHairIssue,
+      appliance_concern: form.applianceConcern,
+      score_total: result.total,
+      risk_level: result.riskLevel,
+      recommendations: result.recommendations,
+      products: result.products,
+    },
+  ]);
+
+  if (error) {
+    console.error("Supabase insert error:", error);
+    alert("Could not save submission / Impossible d’enregistrer la soumission");
+    return;
+  }
 
   sessionStorage.setItem("clareauResult", JSON.stringify(result));
   router.push("/results");
