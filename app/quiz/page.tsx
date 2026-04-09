@@ -48,10 +48,12 @@ export default function QuizPage() {
   ]);
 
   if (error) {
-    console.error("Supabase insert error:", error);
-    alert("Could not save submission / Impossible d’enregistrer la soumission");
-    return;
-  }
+  console.error("Supabase insert error:", error);
+  alert(
+    `Supabase error: ${error.message}\nCode: ${error.code ?? "none"}\nDetails: ${error.details ?? "none"}`
+  );
+  return;
+}
 
   sessionStorage.setItem("clareauResult", JSON.stringify(result));
   router.push("/results");
