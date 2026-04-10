@@ -1,5 +1,5 @@
-console.log("SUPABASE URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
 "use client";
+console.log("SUPABASE URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
 import { supabase } from "../../lib/supabase";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
