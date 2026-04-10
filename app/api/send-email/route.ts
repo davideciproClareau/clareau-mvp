@@ -6,10 +6,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 export async function POST(req: Request) {
   const { email, resultId } = await req.json();
 
-  const url =
-    process.env.NODE_ENV === "development"
-      ? `http://localhost:3000/results/${resultId}`
-      : `https://yourdomain.com/results/${resultId}`;
+  const url = `https://clareau-mvp.vercel.app/results/${resultId}`;
 
   try {
     await resend.emails.send({
