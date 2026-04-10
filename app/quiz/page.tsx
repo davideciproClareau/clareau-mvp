@@ -1,6 +1,5 @@
 "use client";
 console.log("SUPABASE URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
-import { supabase } from "../../lib/supabase";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { scoreSubmission } from "@/lib/scoring";
@@ -29,49 +28,37 @@ export default function QuizPage() {
 
   const result = scoreSubmission(form);
 
-  const { data, error } = await supabase
-    .from("submissions")
-    .insert([
-      {
-        full_name: form.fullName,
-        email: form.email,
-        postal_code: form.postalCode,
-        water_source: form.waterSource,
-        plumbing_age: form.plumbingAge,
-        hardness: form.hardness,
-        taste_odor: form.tasteOdor,
-        staining: form.staining,
-        skin_hair_issue: form.skinHairIssue,
-        appliance_concern: form.applianceConcern,
-        score_total: result.total,
-        risk_level: result.riskLevel,
-        recommendations: result.recommendations,
-        products: result.products,
-      },
-    ])
-    .select("id")
-    .single();
+  const response = await fetch("/api/submit-quiz", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ form, result }),
+  });
 
-  if (error) {
-  console.error("Supabase insert error:", error);
-  alert(
-    `Supabase error: ${error.message}\nCode: ${error.code ?? "none"}\nDetails: ${error.details ?? "none"}`
-  );
-  return;
-}
+  const payload = await response.json();
+
+  if (!response.ok) {
+    alert(
+      `Submit error: ${payload.error ?? "unknown"}\nCode: ${
+        payload.code ?? "none"
+      }\nDetails: ${payload.details ?? "none"}`
+    );
+    return;
+  }
 
   await fetch("/api/send-email", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-  },
-  body: JSON.stringify({
-    email: form.email,
-    resultId: data.id,
-  }),
-});
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      email: form.email,
+      resultId: payload.id,
+    }),
+  });
 
-router.push(`/results/${data.id}`);
+  router.push(`/results/${payload.id}`);
 }
 
 
