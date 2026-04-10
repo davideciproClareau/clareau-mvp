@@ -28,36 +28,51 @@ export default function QuizPage() {
 
   const result = scoreSubmission(form);
 
-  const { error } = await supabase.from("submissions").insert([
-    {
-      full_name: form.fullName,
-      email: form.email,
-      postal_code: form.postalCode,
-      water_source: form.waterSource,
-      plumbing_age: form.plumbingAge,
-      hardness: form.hardness,
-      taste_odor: form.tasteOdor,
-      staining: form.staining,
-      skin_hair_issue: form.skinHairIssue,
-      appliance_concern: form.applianceConcern,
-      score_total: result.total,
-      risk_level: result.riskLevel,
-      recommendations: result.recommendations,
-      products: result.products,
-    },
-  ]);
+  const { data, error } = await supabase
+    .from("submissions")
+    .insert([
+      {
+        full_name: form.fullName,
+        email: form.email,
+        postal_code: form.postalCode,
+        water_source: form.waterSource,
+        plumbing_age: form.plumbingAge,
+        hardness: form.hardness,
+        taste_odor: form.tasteOdor,
+        staining: form.staining,
+        skin_hair_issue: form.skinHairIssue,
+        appliance_concern: form.applianceConcern,
+        score_total: result.total,
+        risk_level: result.riskLevel,
+        recommendations: result.recommendations,
+        products: result.products,
+      },
+    ])
+    .select("id")
+    .single();
 
   if (error) {
-  console.error("Supabase insert error:", error);
-  alert(
-    `Supabase error: ${error.message}\nCode: ${error.code ?? "none"}\nDetails: ${error.details ?? "none"}`
-  );
-  return;
+    console.error("Supabase insert error:", error);
+    alert(
+      `Supabase error: ${error.message}\nCode: ${error.code ?? "none"}\nDetails: ${error.details ?? "none"}`
+    );
+    return;
+  }
+
+  await fetch("/api/send-email", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    email: form.email,
+    resultId: data.id,
+  }),
+});
+
+router.push(`/results/${data.id}`);
 }
 
-  sessionStorage.setItem("clareauResult", JSON.stringify(result));
-  router.push("/results");
-}
 
   return (
     <main className="min-h-screen bg-slate-50 px-6 py-12 text-slate-900">
