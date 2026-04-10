@@ -52,12 +52,12 @@ export default function QuizPage() {
     .single();
 
   if (error) {
-    console.error("Supabase insert error:", error);
-    alert(
-      `Supabase error: ${error.message}\nCode: ${error.code ?? "none"}\nDetails: ${error.details ?? "none"}`
-    );
-    return;
-  }
+  console.error("Supabase insert error:", error);
+  alert(
+    `Supabase error: ${error.message}\nCode: ${error.code ?? "none"}\nDetails: ${error.details ?? "none"}`
+  );
+  return;
+}
 
   await fetch("/api/send-email", {
   method: "POST",
