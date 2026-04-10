@@ -1,3 +1,4 @@
+console.log("SUPABASE URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
 "use client";
 import { supabase } from "../../lib/supabase";
 import { useState } from "react";
