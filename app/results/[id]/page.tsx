@@ -83,3 +83,20 @@ export default async function ResultByIdPage({
     </main>
   );
 }
+<div className="mt-10 rounded-xl border p-6 bg-slate-50">
+  <h2 className="text-2xl font-bold mb-3">
+    Unlock Full Report / Débloquer le rapport complet
+  </h2>
+
+  <p className="mb-4">
+    Get your full personalized water analysis and treatment plan.
+  </p>
+
+  <a
+    href="https://docs.stripe.com"
+    target="_blank"
+    className="bg-black text-white px-6 py-3 rounded-xl inline-block"
+  >
+    Unlock for $19
+  </a>
+</div>
